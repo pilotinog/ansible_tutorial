@@ -1,0 +1,32 @@
+---
+#if you want to run this playbook you need to have apache installed before. 
+- hosts: all
+  become: true
+  tasks:
+ 
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+ 
+- hosts: all
+  become: true
+  tasks:
+
+
+  - name: change e-mail address for admin
+    lineinfile:
+      path: /var/www/html/index.html
+      regexp: '^Ansible'
+      line: Ansible thisissomebody@somewhere.net
+    when: ansible_distribution == "Ubuntu"
+    register: httpd
+
+
+  - name: restart httpd (CentOS)
+    service:
+      name: apache2
+      state: restarted
+    when: httpd.changed 
