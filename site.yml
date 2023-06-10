@@ -1,0 +1,34 @@
+---
+ 
+- hosts: all
+  become: true
+  tasks:
+ 
+  - name: install updates (Ubuntu)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+ 
+- hosts: server
+  become: true
+  tasks:
+ 
+  - name: install apache and php for Ubuntu servers
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+ 
+- hosts: nodes
+  become: true
+  tasks:
+
+
+  - name: install vim-nox
+    apt:
+      name: vim-nox
+      state: latest
+    when: ansible_distribution == "Ubuntu"
